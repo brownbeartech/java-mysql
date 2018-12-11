@@ -29,7 +29,7 @@ public class DbContext implements AutoCloseable {
 
     private final HikariDataSource ds;
 
-    private DbContext(String dbName, CredentialsProvider credentialsProvider) {
+    public DbContext(String dbName, CredentialsProvider credentialsProvider) {
         this.dbName = dbName;
         this.credentials = credentialsProvider.get();
         this.ds = connect();
