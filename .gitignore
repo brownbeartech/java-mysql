@@ -1,0 +1,12 @@
+bazel-bin
+bazel-java-mysql
+bazel-genfiles
+bazel-out
+bazel-testlogs
+*.swp
+*.swo
+.DS_Store
+.idea*
+zeta.iml
+src/secrets
+.ijwb
