@@ -19,25 +19,24 @@ import org.slf4j.LoggerFactory;
  * Executes NamedPreparedStatements, Transactions and simple queries
  **/
 public class DbContext implements AutoCloseable {
+    private static final String JDBC_URL = "jdbc:mysql://%s:%s/%s";
+
     protected static Logger logger = LoggerFactory.getLogger(DbContext.class);
 
-    private static final String HOST_NAME = "127.0.0.1";
-    private static final int PORT = 3306;
-
-    private final String dbName;
+    private final Configuration configuration;
     private final Credentials credentials;
 
     private final HikariDataSource ds;
 
-    public DbContext(String dbName, CredentialsProvider credentialsProvider) {
-        this.dbName = dbName;
+    public DbContext(Configuration configuration, CredentialsProvider credentialsProvider) {
+        this.configuration = configuration;
         this.credentials = credentialsProvider.get();
         this.ds = connect();
     }
 
     private HikariDataSource connect() {
         HikariConfig config = new HikariConfig();
-        config.setJdbcUrl("jdbc:mysql://" + HOST_NAME + ":" + PORT + "/" + dbName);
+        config.setJdbcUrl(formatJdbcUrl());
         config.setUsername(credentials.getUserName());
         config.setPassword(credentials.getPassword());
         config.addDataSourceProperty("serverTimezone", "UTC");
@@ -60,6 +59,10 @@ public class DbContext implements AutoCloseable {
         config.setLeakDetectionThreshold(2000);
 
         return new HikariDataSource(config);
+    }
+
+    private String formatJdbcUrl() {
+        return String.format(JDBC_URL, configuration.getHost(), configuration.getPort(), configuration.getDbName());
     }
 
     public <T> List<T> executeQuery(String query, RowMapper<T> rowMapper) throws SQLException {
