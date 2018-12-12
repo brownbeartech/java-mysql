@@ -7,37 +7,34 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
-/**
- * <R> The result of each statement's execution can be stored in a custom container, R
- */
-public class Transaction<R> {
-    public final List<Statement<R>> statements;
+public class Transaction {
+    public final List<Statement> statements;
 
     @FunctionalInterface
-    public interface Statement<R> {
-        void execute(Connection connection, ConnectionArtifacts artifacts, R result) throws SQLException;
+    public interface Statement {
+        void execute(Connection connection, ConnectionArtifacts artifacts) throws SQLException;
     }
-    
-    public Transaction(List<Statement<R>> statements) {
+
+    public Transaction(List<Statement> statements) {
         this.statements = ImmutableList.copyOf(statements);
     }
 
-    public void run(Connection connection, ArtifactCollection collection, R result) throws SQLException {
-        for (Statement<R> statement : statements) {
-            statement.execute(connection, collection.provide(), result);
+    public void run(Connection connection, ArtifactCollection collection) throws SQLException {
+        for (Statement statement : statements) {
+            statement.execute(connection, collection.provide());
         }
     }
 
-    public static class Builder<R> {
-        public List<Statement<R>> statements = new ArrayList<>();
- 
-        public Builder<R> addStatement(Statement<R> s) {
+    public static class Builder {
+        public List<Statement> statements = new ArrayList<>();
+
+        public Builder addStatement(Statement s) {
             this.statements.add(s);
             return this;
         }
 
-        public Transaction<R> build() {
-            return new Transaction<R>(statements);
+        public Transaction build() {
+            return new Transaction(statements);
         }
     }
 }

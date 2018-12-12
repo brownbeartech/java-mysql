@@ -111,14 +111,14 @@ public class DbContext implements AutoCloseable {
         }
     }
 
-    public <R> void runTransaction(Transaction<R> transaction, R result) throws SQLException {
+    public void runTransaction(Transaction transaction) throws SQLException {
         SQLException exception = null;
         Connection connection = null;
         ArtifactCollection artifacts = new ArtifactCollection();
         try {
             connection = ds.getConnection();
             connection.setAutoCommit(false);
-            transaction.run(connection, artifacts, result);
+            transaction.run(connection, artifacts);
             connection.commit(); 
         } catch (SQLException transactionException) {
             exception = transactionException;
