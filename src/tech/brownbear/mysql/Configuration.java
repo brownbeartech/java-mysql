@@ -44,6 +44,10 @@ public class Configuration {
         this.dbName = dbName;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public String getHost() {
         return host;
     }
