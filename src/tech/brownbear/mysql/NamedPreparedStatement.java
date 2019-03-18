@@ -51,6 +51,11 @@ public class NamedPreparedStatement extends RawPreparedStatement {
         return this;
     }
 
+    public NamedPreparedStatement setBinary(String name, byte[] value) {
+        addParam(new Param(name, value, Types.BINARY));
+        return this;
+    }
+
     private void addParam(Param param) {
         Preconditions.checkArgument(!paramsByName.containsKey(param.name), "Parameter with key '" + param.name + "' already exists");
         paramsByName.put(param.name, param);
@@ -83,6 +88,8 @@ public class NamedPreparedStatement extends RawPreparedStatement {
                     ps.setInt(i, (int) param.value);
                 } else if (param.type == Types.BIGINT) {
                     ps.setLong(i, (long) param.value);
+                } else if (param.type == Types.BINARY) {
+                    ps.setBytes(i, (byte[]) param.value);
                 }
             } else {
                 ps.setNull(i, param.type);
