@@ -107,6 +107,12 @@ public class DbContext implements AutoCloseable {
         }
     }
 
+    public boolean executeInsert(String query) throws SQLException {
+        try (Connection connection = ds.getConnection()) {
+            return connection.prepareStatement(query).execute();
+        }
+    }
+
     public void executeBulkInsert(RawPreparedStatement ps) throws SQLException {
         try (Connection connection = ds.getConnection();
              ConnectionArtifacts artifacts = new ConnectionArtifacts()) {
