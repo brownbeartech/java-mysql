@@ -4,11 +4,12 @@ java_library(
     name = "mysql",
     srcs = glob(["tech/brownbear/mysql/*.java"]),
     deps = [
-        "@com_zaxxer_hikari//jar",
-        "@com_google_guava//jar",
-        "@org_json//jar",
-        "@org_slf4j_api//jar",
-        "@mysql_connector_java//jar",
+        "@maven//:mysql_mysql_connector_java",
+        "@maven//:org_slf4j_slf4j_api",
+        "@maven//:com_google_guava_guava",
+        "@maven//:com_zaxxer_HikariCP",
+        "@maven//:com_google_code_gson_gson",
+        "@maven//:org_json_json",
         "@tech_brownbear_resources//src:resources",
     ],
 )
